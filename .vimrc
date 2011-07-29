@@ -30,6 +30,7 @@ colorscheme github
 " let &guioptions = substitute(&guioptions, "T", "", "g")
 set guioptions-=T
 set guioptions-=M
+set guioptions-=m
 "if has("transparency")
 "  set transparency=25
 "endif
@@ -129,6 +130,9 @@ endif
 "moving between windows
  map <C-J> <C-W>j<C-W>_
  map <C-K> <C-W>k<C-W>_
+" moving between tabs
+map <C-L> :tabn<CR>
+map <C-H> :tabp<CR>
  map <C-S> :w<CR>
 
  map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
