@@ -65,7 +65,7 @@ inoremap <C-U> <C-G>u<C-U>
 "
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
-  set mouse=a
+  set mouse=nicr
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -126,6 +126,10 @@ endif
 
 " Window min height
  set wmh=0
+
+ " resizing windows
+map ê <C-W>- " alt-j
+map ë <C-W>+ " alt-k
 
 "moving between windows
  map <C-J> <C-W>j<C-W>_
