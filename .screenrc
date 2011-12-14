@@ -4,3 +4,12 @@
 hardstatus on
 hardstatus alwayslastline
 hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+
+# turn off startup message
+startup_message off
+
+# create a shell and a bash window to start
+screen 0 bash
+screen vim
+screen vim
+select 0
