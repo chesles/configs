@@ -24,7 +24,8 @@ if v:progname =~? "evim"
   finish
 endif
 
-colorscheme github
+let g:zenburn_high_Contrast=1
+colorscheme zenburn
 
 " Disable toolbar
 " let &guioptions = substitute(&guioptions, "T", "", "g")
@@ -36,9 +37,9 @@ set guioptions-=m
 "endif
 
 " Tab width
-set softtabstop=2
-set shiftwidth=2
-set tabstop=2
+set softtabstop=4
+set shiftwidth=4
+set tabstop=4
 set expandtab
 " convert tabs to spaces
   set smarttab
@@ -82,6 +83,21 @@ if has("autocmd")
   highlight ExtraWhitespace ctermbg=red guibg=red
   "highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
   match ExtraWhitespace /\s\+$\|\t/
+
+  " highlight long lines (via http://stackoverflow.com/a/1919805/223594)
+  nnoremap <Leader>H :call<SID>LongLineHLToggle()<cr>
+  hi OverLength ctermbg=none cterm=none
+  match OverLength /\%>80v/
+  fun! s:LongLineHLToggle()
+    if !exists('w:longlinehl')
+      let w:longlinehl = matchadd('ErrorMsg', '.\%>80v', 0)
+      echo "Long lines highlighted"
+    else
+      call matchdelete(w:longlinehl)
+      unl w:longlinehl
+      echo "Long lines unhighlighted"
+    endif
+  endfunction
 
 
   " Enable file type detection.
