@@ -24,8 +24,8 @@ if v:progname =~? "evim"
   finish
 endif
 
-let g:zenburn_high_Contrast=1
-colorscheme zenburn
+" let g:zenburn_high_Contrast=1
+" colorscheme zenburn
 
 " Disable toolbar
 " let &guioptions = substitute(&guioptions, "T", "", "g")
@@ -37,12 +37,12 @@ set guioptions-=m
 "endif
 
 " Tab width
-set softtabstop=4
-set shiftwidth=4
-set tabstop=4
+set softtabstop=2
+set shiftwidth=2
+set tabstop=2
 set expandtab
 " convert tabs to spaces
-  set smarttab
+set smarttab
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -63,11 +63,14 @@ map Q gq
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
+
 "
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
-  set mouse=nicr
+  set mouse=a
 endif
+
+set t_Co=256
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -80,6 +83,7 @@ endif
 if has("autocmd")
   " show whitespace that's at the end of a line
   autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+
   highlight ExtraWhitespace ctermbg=red guibg=red
   "highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
   match ExtraWhitespace /\s\+$\|\t/
@@ -167,6 +171,7 @@ map <C-H> :tabp<CR>
  map ,, ZZ
 
 " Store swap files here.
-"  set directory=.,~/.viswp, /tmp
-"  set backupdir=.,~/.vimbackup, /tmp
+set directory=~/.vimtmp/swp,/tmp
+set backupdir=~/.vimtmp/backup,/tmp
 
+set laststatus=2
