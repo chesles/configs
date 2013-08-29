@@ -36,25 +36,22 @@ prompt_vcs() {
   prompt_git || prompt_svn || prompt_hg
 }
 
-prompt_char() {
-  if [ ${EUID} -eq 0 ]; then
-    echo -ne '#'
-  else
-    echo -ne '$'
-  fi
+box() {
+  echo -ne  "\0342\0226\0210"
 }
 
 last_command_status() {
   if [ $? -ne 0 ]; then
-    echo -ne "$(color 196)\xE2\x9C\x97$(color 0)" # red X
+    echo -ne "$(color 9)$(box)$(color 0)"
   else
-    echo -ne "$(color 82)\xE2\x9C\x93$(color 0)" # green check mark
+    echo -ne "$(color 10)$(box)$(color 0)"
   fi
 }
 
-export PS1='$(last_command_status) $(color 4)$(prompt_vcs)$(color 2) \w\e$(color 7)\n$(prompt_char) '
 
 # vi mode
+export PS1='$(last_command_status) -- $(color 166)\u@\h$(color 0) $(color 4)$(prompt_vcs)\n$(color 2)\w\e$(color 7)\n\$ '
+
 set -o vi
 bind -m vi '":e":edit-and-execute-command'
 
