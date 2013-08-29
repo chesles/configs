@@ -1,0 +1,19 @@
+[user]
+	name = John Chesley
+	email = john@chesl.es
+
+[color]
+  ui = true
+
+[merge]
+  tool = vimdiff
+
+[alias]
+  ll = log --pretty=oneline --abbrev-commit --graph --decorate
+  lr = log --pretty=oneline --abbrev-commit --graph --decorate -n 5
+  co = checkout
+  s = status
+  d = diff
+
+[push]
+  default = current
