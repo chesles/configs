@@ -1,3 +1,5 @@
 # initialize rbenv
-eval "$(rbenv init -)"
-export PATH=~/.rbenv/shims:$PATH
+if [[ -d ~/.rbenv ]]; then
+  eval "$(~/.rbenv/bin/rbenv init -)"
+  export PATH=~/.rbenv/shims:$PATH
+fi

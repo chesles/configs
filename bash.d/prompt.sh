@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # colors
-function color() { echo -ne "\033[38;5;$1m"; }
+function color() {
+  [ -n "$DISPLAY" ] && echo -ne "\033[38;5;$1m";
+}
 
 # fancy $PS1 stuff
 prompt_git() {
