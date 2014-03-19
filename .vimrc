@@ -1,139 +1,97 @@
-" An example for a vimrc file.
+" ~john/.vimrc
 "
-" Maintainer:   John Chesley
-" Last change:  17 March 2011
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"        for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"      for OpenVMS:  sys$login:.vimrc
+" borrowing heavily from Steve Losh
+" - http://stevelosh.com/blog/2010/09/coming-home-to-vim/#making-vim-more-useful
+" - https://bitbucket.org/sjl/dotfiles/src
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+filetype off
+call pathogen#infect("~/configs/.vim/bundle")
+filetype plugin indent on
 set nocompatible
 
-if exists('+autochdir')
-  set autochdir
-else
-  autocmd BufEnter * silent! lcd %:p:h:gs/ /\\ /
+" Basic options
+set encoding=utf-8
+set modelines=0
+set autoindent
+set showmode
+set showcmd
+set backspace=indent,eol,start
+set ttyfast
+set ruler
+set history=50
+set nolist
+set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮
+set showbreak=->
+set laststatus=2
+
+set incsearch
+set ignorecase
+set smartcase
+
+set autowrite
+set autoread
+
+set notimeout
+set ttimeout
+set ttimeoutlen=10
+
+" gui/display stuff
+set t_Co=256
+syntax on
+set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+set guioptions=egrLt  " Disable toolbar
+let g:airline_powerline_fonts = 1
+set mouse=a
+set hlsearch
+
+" }}}
+" Trailing whitespace {{{
+" Only shown when not in insert mode so I don't go insane.
+augroup trailing
+    au!
+    au InsertEnter * :set listchars-=trail:⌴
+    au InsertLeave * :set listchars+=trail:⌴
+augroup END
+
+" Highlight VCS conflict markers
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+
+" backups and temp files
+set backup
+set noswapfile
+set undofile
+
+set directory=~/.vim/tmp/swp
+set backupdir=~/.vim/tmp/backup
+set undodir=~/.vim/tmp/undo
+set backupskip=/tmp/*,/private/tmp/*
+
+" Make those folders automatically if they don't already exist.
+if !isdirectory(expand(&undodir))
+  call mkdir(expand(&undodir), "p")
+endif
+if !isdirectory(expand(&backupdir))
+  call mkdir(expand(&backupdir), "p")
+endif
+if !isdirectory(expand(&directory))
+  call mkdir(expand(&directory), "p")
 endif
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
-
-" let g:zenburn_high_Contrast=1
-" colorscheme zenburn
-
-" Disable toolbar
-" let &guioptions = substitute(&guioptions, "T", "", "g")
-set guioptions-=T
-set guioptions-=M
-set guioptions-=m
-"if has("transparency")
-"  set transparency=25
-"endif
-
-" Tab width
+" tabs & spaces
 set softtabstop=2
 set shiftwidth=2
 set tabstop=2
 set expandtab
-" convert tabs to spaces
 set smarttab
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+" Resize splits when the window is resized
+au VimResized * :wincmd =
 
-if has("vms")
-  set nobackup  " do not keep a backup file, use versions instead
+if exists('+autochdir')
+  set autochdir
 else
-  set backup  " keep a backup file
+  au BufEnter * silent! lcd %:p:h:gs/ /\\ /
 endif
-set history=50  " keep 50 lines of command line history
-set ruler   " show the cursor position all the time
-set showcmd   " display incomplete commands
-set incsearch   " do incremental searching
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
-
-"
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
-endif
-
-set t_Co=256
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-  " show whitespace that's at the end of a line
-  autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-
-  highlight ExtraWhitespace ctermbg=red guibg=red
-  "highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
-  match ExtraWhitespace /\s\+$\|\t/
-
-  " highlight long lines (via http://stackoverflow.com/a/1919805/223594)
-  nnoremap <Leader>H :call<SID>LongLineHLToggle()<cr>
-  hi OverLength ctermbg=none cterm=none
-  match OverLength /\%>80v/
-  fun! s:LongLineHLToggle()
-    if !exists('w:longlinehl')
-      let w:longlinehl = matchadd('ErrorMsg', '.\%>80v', 0)
-      echo "Long lines highlighted"
-    else
-      call matchdelete(w:longlinehl)
-      unl w:longlinehl
-      echo "Long lines unhighlighted"
-    endif
-  endfunction
-
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
-
-  augroup END
-
-else
-
-  set autoindent    " always set autoindenting on
-
-endif " has("autocmd")
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
@@ -143,35 +101,34 @@ if !exists(":DiffOrig")
       \ | wincmd p | diffthis
 endif
 
+" }}}
+" Line Return {{{
 
-" Window min height
- set wmh=0
+" Make sure Vim returns to the same line when you reopen a file.
+" Thanks, Amit
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
 
- " resizing windows
-map ê <C-W>- " alt-j
-map ë <C-W>+ " alt-k
+" convenience stuff
 
-"moving between windows
- map <C-J> <C-W>j<C-W>_
- map <C-K> <C-W>k<C-W>_
-" moving between tabs
-map <C-L> :tabn<CR>
-map <C-H> :tabp<CR>
- map <C-S> :w<CR>
+" disable F1 help
+noremap <F1> :checktime<cr>
+inoremap <F1> <esc>:checktime<cr>
 
- map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
- map ,p :sp <C-R>=expand("%:p:h") . "/" <CR>
+" normal regex
+nnoremap / /\v
+vnoremap / /\v
 
- map ,v :sp ~/.vimrc<CR>
+" clear search highlighting
+nnoremap <leader><space> :noh<cr>
 
-"update the system settings from my vimrc file
- map ,u :source ~/.vimrc<CR>
-
-"write and close
- map ,, ZZ
-
-" Store swap files here.
-set directory=~/.vimtmp/swp,/tmp
-set backupdir=~/.vimtmp/backup,/tmp
-
-set laststatus=2
+" some shortcuts
+nnoremap <tab> %
+vnoremap <tab> %
+nnoremap ; :
+inoremap jj <ESC>
