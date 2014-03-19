@@ -1,0 +1,9 @@
+[submodule ".vim/bundle/vim-airline"]
+	path = .vim/bundle/vim-airline
+	url = https://github.com/bling/vim-airline
+[submodule ".vim/bundle/vim-javascript-indent"]
+	path = .vim/bundle/vim-javascript-indent
+	url = https://github.com/vim-scripts/JavaScript-Indent
+[submodule ".vim/bundle/vim-javascript-syntax"]
+	path = .vim/bundle/vim-javascript-syntax
+	url = https://github.com/jelera/vim-javascript-syntax.git
