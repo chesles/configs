@@ -2,7 +2,8 @@
 
 # colors
 function color() {
-  [ -n "$DISPLAY" ] && echo -ne "\033[38;5;$1m";
+  local color_count=$(tput colors)
+  [[ $? -eq 0 && $color_count -gt 2 ]] && echo -ne "\033[38;5;$1m";
 }
 
 # fancy $PS1 stuff
@@ -49,5 +50,5 @@ last_command_status() {
   fi
 }
 
-export PS1='$(last_command_status) -- $(color 166)\u@\h$(color 0) $(color 4)$(prompt_vcs)\n$(color 2)\w\e$(color 7)\n\$ '
+export PS1='$(last_command_status) $(color 4)\u@$(color 166)\h$(color 0) $(color 4)$(prompt_vcs)\n$(color 2)\w$(color 7)\n\$ '
 
